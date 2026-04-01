@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laica Rivera | Digital Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        body { background-color: #fce4ec; font-family: 'Outfit', sans-serif; color: #444; margin: 0; overflow: hidden; height: 100vh; }
+
+        /* --- PAGE TRANSITION --- */
+        .content-section { display: none; animation: fadeInPage 0.6s ease-out forwards; }
+        .content-section.active { display: block; }
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- NAVIGATION --- */
+        .right-nav {
+            position: fixed; right: 30px; top: 50%; transform: translateY(-50%); z-index: 1000;
+            display: flex; flex-direction: column; gap: 12px; background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px); padding: 20px 12px; border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(233, 78, 138, 0.2); border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .nav-item-custom {
+            width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
+            background: white; color: #e94e8a; border-radius: 50%; text-decoration: none;
+            transition: 0.4s; position: relative; cursor: pointer;
+        }
+        .nav-item-custom.active { background: #e94e8a; color: white; }
+        .nav-item-custom span {
+            position: absolute; right: 65px; background: #e94e8a; color: white;
+            padding: 5px 15px; border-radius: 10px; font-size: 0.75rem; font-weight: 600;
+            opacity: 0; visibility: hidden; transition: 0.3s; white-space: nowrap;
+        }
+        .nav-item-custom:hover span { opacity: 1; visibility: visible; right: 60px; }
+
+        /* --- LAYOUT --- */
+        .main-wrapper { height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px; }
+        .main-card {
+            background: white; border-radius: 50px; overflow: hidden;
+            box-shadow: 0 30px 70px rgba(233, 78, 138, 0.15); border: none;
+            width: 100%; max-width: 1100px; height: 85vh;
+        }
+        .sidebar-pink {
+            background: linear-gradient(180deg, #e94e8a 0%, #c82a6d 100%); color: white;
+            padding: 40px 20px; text-align: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .profile-img {
+            width: 160px; height: 160px; border-radius: 40px; object-fit: cover;
+            border: 6px solid rgba(255, 255, 255, 0.2); transform: rotate(-3deg);
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: rotate(-3deg) translateY(0px); }
+            50% { transform: rotate(-1deg) translateY(-15px); }
+        }
+
+        .content-area { padding: 50px; height: 100%; overflow-y: auto; }
+        .name-title { font-size: 3rem; font-weight: 700; color: #e94e8a; margin-bottom: 20px; }
+        .section-title { font-weight: 700; text-transform: uppercase; font-size: 0.8rem; color: #e94e8a; margin: 25px 0 15px; display: block; letter-spacing: 1px;}
+
+        /* --- CARDS & BUTTONS --- */
+        .card-minimal { border-radius: 20px; background: #fffafa; border: 1px solid #f8bbd0; padding: 20px; transition: 0.3s; }
+        .card-minimal:hover { transform: translateY(-5px); border-color: #e94e8a; }
+
+        /* Container for images that shouldn't be cut */
+        .project-img-box {
+            height: 140px;
+            width: 100%;
+            background: #fff0f6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .project-img-box img { max-height: 100%; max-width: 100%; object-fit: contain; }
+
+        .skill-pill { background: #fff0f6; color: #e94e8a; padding: 8px 18px; border-radius: 50px; font-weight: 600; font-size: 0.85rem; border: 1px solid #f8bbd0; display: inline-block; margin: 5px; }
+        .btn-contact { background: #e94e8a; color: white; border-radius: 50px; font-weight: 700; border: none; padding: 15px 40px; transition: 0.3s; }
+        .btn-contact:hover { background: #c82a6d; transform: scale(1.05); color: white; }
+
+        .hobby-item {
+            display: flex; align-items: center; gap: 12px; padding: 12px;
+            background: #fff0f6; border-radius: 15px; margin-bottom: 10px;
+            border: 1px solid #f8bbd0; transition: 0.3s; color: #e94e8a;
+        }
+        .hobby-item:hover { background: #e94e8a; color: white; }
+        .contact-info-card { display: flex; align-items: center; gap: 15px; padding: 15px; background: white; border-radius: 15px; border: 1px solid #f8bbd0; margin-bottom: 10px; }
+
+        .sidebar-socials a { color: white; opacity: 0.7; transition: 0.3s; font-size: 1.4rem; }
+        .sidebar-socials a:hover { opacity: 1; transform: scale(1.2); }
+
+        @media (max-width: 992px) {
+            body { overflow-y: auto; height: auto; }
+            .main-wrapper { height: auto; padding: 20px; }
+            .main-card { height: auto; border-radius: 30px; }
+            .right-nav { top: auto; bottom: 20px; left: 50%; right: auto; transform: translateX(-50%); flex-direction: row; width: 95%; justify-content: center; }
+            .content-area { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="right-nav">
+    <div onclick="showPage('about')" class="nav-item-custom active" id="nav-about"><i class="bi bi-person-fill"></i><span>About</span></div>
+    <div onclick="showPage('skills')" class="nav-item-custom" id="nav-skills"><i class="bi bi-stars"></i><span>Skills</span></div>
+    <div onclick="showPage('projects')" class="nav-item-custom" id="nav-projects"><i class="bi bi-briefcase-fill"></i><span>Projects</span></div>
+    <div onclick="showPage('hobbies')" class="nav-item-custom" id="nav-hobbies"><i class="bi bi-heart-fill"></i><span>Hobbies</span></div>
+    <div onclick="showPage('education')" class="nav-item-custom" id="nav-education"><i class="bi bi-book-half"></i><span>Education</span></div>
+    <div onclick="showPage('contact')" class="nav-item-custom" id="nav-contact"><i class="bi bi-chat-dots-fill"></i><span>Contact</span></div>
+</div>
+
+<div class="main-wrapper">
+    <div class="card main-card">
+        <div class="row g-0 h-100">
+
+            <div class="col-md-4 sidebar-pink">
+                <img src="{% static 'laicaprofile.jpg' %}" class="profile-img shadow-lg" alt="Laica Rivera">
+                <h3 class="fw-bold mt-4 mb-1">Laica Rivera</h3>
+                <p class="opacity-75 small mb-4">Computer Science Student</p>
+
+                <div class="d-flex gap-3 sidebar-socials">
+                    <a href="https://www.facebook.com/share/1297pC2pP79/?mibextid=wwXIfr" target="_blank"><i class="bi bi-facebook"></i></a>
+                    <a href="https://www.instagram.com/lay_caaa25" target="_blank"><i class="bi bi-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/laica-rivera-1314543b1" target="_blank"><i class="bi bi-linkedin"></i></a>
+                    <a href="https://github.com/laicarivera25" target="_blank"><i class="bi bi-github"></i></a>
+                </div>
+            </div>
+
+            <div class="col-md-8 content-area">
+
+                <div id="about" class="content-section active">
+                    <h1 class="name-title">Hello!</h1>
+                    <p class="lead" style="font-style: italic; color: #555;">
+                        "I am a dedicated Computer Science student who is passionate about using technology and design to build a better future. My goal is to keep learning and improving my skills so I can make a positive and meaningful impact on the community."
+                    </p>
+                    <div class="mt-5">
+                        <button class="btn btn-contact shadow-lg" onclick="showPage('contact')">
+                            <i class="bi bi-envelope-heart me-2"></i> Get In Touch
+                        </button>
+                    </div>
+                </div>
+
+                <div id="skills" class="content-section">
+                    <span class="section-title">Technical Expertise</span>
+                    <div class="d-flex flex-wrap">
+                        <div class="skill-pill">Python</div>
+                        <div class="skill-pill">Adobe Photoshop</div>
+                        <div class="skill-pill">Illustrator</div>
+                        <div class="skill-pill">InDesign</div>
+                    </div>
+                </div>
+
+                <div id="projects" class="content-section">
+                    <span class="section-title">My Creative Work</span>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="card-minimal h-100 p-3">
+                                <h6 class="fw-bold mb-2">Python Skill Up</h6>
+                                <div class="project-img-box">
+                                    <img src="{% static 'python.jpg' %}" alt="Python Work">
+                                </div>
+                                <p class="x-small text-muted mb-0">Creative digital manipulation works.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-minimal h-100 p-3">
+                                <h6 class="fw-bold mb-2">InDesign Magazine</h6>
+                                <div class="project-img-box">
+                                    <img src="{% static 'Magazine.jpg' %}" alt="Magazine Project">
+                                </div>
+                                <p class="x-small text-muted mb-0">Professional layout for print media.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-minimal h-100 p-3">
+                                <h6 class="fw-bold mb-2">Seminar's Certificate</h6>
+                                <div class="project-img-box">
+                                    <img src="{% static 'Seminar.jpg' %}" alt="Seminar Certificate">
+                                </div>
+                                <p class="x-small text-muted mb-0">Official recognition and certification.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="hobbies" class="content-section">
+                    <span class="section-title">Things I Love</span>
+                    <div class="row g-2">
+                        <div class="col-6"><div class="hobby-item"><i class="bi bi-camera-fill"></i><span>Photography</span></div></div>
+                        <div class="col-6"><div class="hobby-item"><i class="bi bi-palette-fill"></i><span>Designing</span></div></div>
+                        <div class="col-6"><div class="hobby-item"><i class="bi bi-music-note-beamed"></i><span>Music</span></div></div>
+                        <div class="col-6"><div class="hobby-item"><i class="bi bi-egg-fried"></i> <span>Cooking</span></div></div>
+                    </div>
+                </div>
+
+                <div id="education" class="content-section">
+                    <span class="section-title">Academic Journey</span>
+                    <div class="ps-3 border-start border-4" style="border-color: #e94e8a !important;">
+                        <h5 class="fw-bold mb-1">Bachelor of Science in Computer Science</h5>
+                        <p class="text-muted small">Negros Oriental State University</p>
+                        <small style="color: #e94e8a;" class="fw-bold">2025 - 2026</small>
+                    </div>
+                </div>
+
+                <div id="contact" class="content-section">
+                    <span class="section-title">Direct Info</span>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="contact-info-card">
+                                <i class="bi bi-envelope-at-fill"></i>
+                                <div><h6 class="mb-0 fw-bold small">Email</h6><p class="mb-0 x-small">laicarivera25@gmail.com</p></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="contact-info-card">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                <div><h6 class="mb-0 fw-bold small">Location</h6><p class="mb-0 x-small">Santa Catalina, Negros Oriental</p></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <span class="section-title">Social Connect</span>
+                    <div class="row g-2 mb-4">
+                        <div class="col-6 col-md-3">
+                            <a href="https://www.facebook.com/share/1297pC2pP79/?mibextid=wwXIfr" target="_blank" class="text-decoration-none">
+                                <div class="hobby-item justify-content-center text-center">
+                                    <i class="bi bi-facebook d-block"></i><span class="small fw-bold">Facebook</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="https://www.instagram.com/lay_caaa25" target="_blank" class="text-decoration-none">
+                                <div class="hobby-item justify-content-center text-center">
+                                    <i class="bi bi-instagram d-block"></i><span class="small fw-bold">Instagram</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="https://www.linkedin.com/in/laica-rivera-1314543b1" target="_blank" class="text-decoration-none">
+                                <div class="hobby-item justify-content-center text-center">
+                                    <i class="bi bi-linkedin d-block"></i><span class="small fw-bold">LinkedIn</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="https://github.com/laicarivera25" target="_blank" class="text-decoration-none">
+                                <div class="hobby-item justify-content-center text-center">
+                                    <i class="bi bi-github d-block"></i><span class="small fw-bold">GitHub</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-contact shadow-lg w-100" data-bs-toggle="modal" data-bs-target="#contactModal">
+                        <i class="bi bi-send-fill me-2"></i> Send a Message
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow border-0">
+            <div class="modal-header text-white" style="background: #e94e8a;">
+                <h5 class="modal-title fw-bold">Message Me</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="contactForm">
+                    <input type="text" class="form-control mb-3" placeholder="Your Name" required>
+                    <textarea class="form-control mb-3" style="height: 100px" placeholder="Your Message" required></textarea>
+                    <button type="submit" class="btn btn-contact w-100">Send Information</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function showPage(pageId) {
+        document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        document.querySelectorAll('.nav-item-custom').forEach(nav => nav.classList.remove('active'));
+        document.getElementById('nav-' + pageId).classList.add('active');
+        document.querySelector('.content-area').scrollTop = 0;
+    }
+
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert("Thank you! Your information has been delivered.");
+        bootstrap.Modal.getInstance(document.getElementById('contactModal')).hide();
+        this.reset();
+    });
+</script>
+</body>
+</html>
